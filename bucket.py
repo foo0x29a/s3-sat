@@ -1,6 +1,10 @@
+import boto3
+
+
 class Bucket:
-    def __init__(self, s3, name):
-        self.__bucket = s3.Bucket(name)
+    def __init__(self, name):
+        self.__s3 = boto3.resource("s3")
+        self.__bucket = self.__s3.Bucket(name)
         self.__name = self.__bucket.name
         self.__creation_date = self.__bucket.creation_date
         (
