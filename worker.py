@@ -9,9 +9,14 @@ class Worker(Process):
         super().__init__()
 
     def run(self):
-        while not self.__queue.empty():
+        while True:
             bucket_name = self.__queue.get()
+            if bucket_name == None:
+                break
             bucket = Bucket(bucket_name)
             self.__lock.acquire()
             print(bucket)
             self.__lock.release()
+            self.__queue.task_done()
+
+        self.__queue.task_done()

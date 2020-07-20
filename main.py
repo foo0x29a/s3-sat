@@ -1,5 +1,5 @@
 import boto3
-from multiprocessing import Lock, Queue
+from multiprocessing import Lock, JoinableQueue
 from worker import Worker
 
 workers_number = 5
@@ -10,9 +10,12 @@ def fill_queue(queue):
     for bucket in s3.buckets.all():
         queue.put(bucket.name)
 
+    for i in range(0, workers_number):
+        queue.put(None)
+
 
 def main():
-    queue = Queue()
+    queue = JoinableQueue()
     lock = Lock()
     workers = []
 
@@ -22,6 +25,8 @@ def main():
         p = Worker(queue, lock)
         workers.append(p)
         p.start()
+
+    queue.join()
 
     for worker in workers:
         worker.join()
