@@ -8,7 +8,7 @@ workers_number = 4
 def fill_queue(queue):
     s3 = boto3.resource("s3")
     for bucket in s3.buckets.all():
-        queue.put(bucket.name)
+        queue.put((bucket.name, bucket.creation_date))
 
     for i in range(0, workers_number):
         queue.put(None)
@@ -16,13 +16,12 @@ def fill_queue(queue):
 
 def main():
     queue = JoinableQueue()
-    lock = Lock()
     workers = []
 
     fill_queue(queue)
 
     for i in range(0, workers_number):
-        p = Worker(queue, lock)
+        p = Worker(queue)
         workers.append(p)
         p.start()
 

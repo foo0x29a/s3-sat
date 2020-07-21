@@ -1,28 +1,31 @@
-import boto3
+import aioboto3
 
 
 class Bucket:
-    def __init__(self, name):
-        self.__s3 = boto3.resource("s3")
-        self.__bucket = self.__s3.Bucket(name)
-        self.__name = self.__bucket.name
-        self.__creation_date = self.__bucket.creation_date
-        (
-            self.__number_of_files,
-            self.__size,
-            self.__most_recent_file,
-            self.__last_modified,
-        ) = self.__process_files()
+    def __init__(self, name, creation_date):
+        self.__name = name
+        self.__creation_date = creation_date
 
-    def __process_files(self):
+    async def process_bucket(self):
+        async with aioboto3.resource("s3") as s3:
+            bucket = await s3.Bucket(self.__name)
+            (
+                self.__number_of_files,
+                self.__size,
+                self.__most_recent_file,
+                self.__last_modified,
+            ) = await self.__process_files(bucket)
+            print(self)
+
+    async def __process_files(self, bucket):
         number_of_files = 0
         total_size = 0.0
         most_recent_file = ""
         last_modified = ""
 
-        for object in self.__bucket.objects.all():
-            size = object.size
-            date = object.last_modified
+        async for object in bucket.objects.all():
+            size = await object.size
+            date = await object.last_modified
             if last_modified == "" or date > last_modified:
                 last_modified = date
                 most_recent_file = object.key
