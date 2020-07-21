@@ -2,7 +2,7 @@ import boto3
 from multiprocessing import Lock, JoinableQueue
 from worker import Worker
 
-workers_number = 5
+workers_number = 4
 
 
 def fill_queue(queue):
