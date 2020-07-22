@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--workers","-w", type=workers_type, help="Number of workers. A good heuristic is: max((number_of_cpus - 1), 1)", default = 1)
-    parser.add_argument("--bucket-prefix","-b", type=str, help="Regular expression to filter buckets", default = ".*")
+    parser.add_argument("--bucket-filter","-b", type=str, help="Regular expression to filter buckets", default = ".*")
     parser.add_argument("--key-filter","-k", type=str, help="Regular expression to filter keys", default = ".*")
     args = parser.parse_args()
-    start_workers(args.workers, args.bucket_prefix, args.key_filter)
+    start_workers(args.workers, args.bucket_filter, args.key_filter)
