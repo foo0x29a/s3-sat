@@ -1,6 +1,6 @@
 import asyncio
 from multiprocessing import Process
-from bucket import Bucket
+from .bucket import Bucket
 
 
 class Worker(Process):
