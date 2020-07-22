@@ -44,11 +44,18 @@ class Bucket:
             n += 1
         return f"{size} {power_labels[n]}B"
 
+    def __calculate_cost(self, size):
+        gb = size/1024/1024/1024
+        # rough cost estimate based on the us-east-1 price
+        price = gb * 0.023
+        return f'{price:.3f}'
+
     def __str__(self):
         return (
             f"Bucket Name: {self.__name}\n"
             f"Creation Date: {self.__creation_date}\n"
             f"Number of Files: {self.__number_of_files}\n"
             f"Total Size: {self.__format_bytes(self.__size)}\n"
+            f"Total Cost: USD {self.__calculate_cost(self.__size)}\n"
             f"Most Recent Updated File: {self.__most_recent_file} Last Modified: {self.__last_modified}\n"
         )
