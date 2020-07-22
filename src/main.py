@@ -15,14 +15,14 @@ def fill_queue(queue, workers_number, bucket_prefix):
         queue.put(None)
 
 
-def start_workers(workers_number, bucket_prefix):
+def start_workers(workers_number, bucket_prefix, key_filter):
     queue = JoinableQueue()
     workers = []
 
     fill_queue(queue, workers_number, bucket_prefix)
 
     for i in range(0, workers_number):
-        p = Worker(queue)
+        p = Worker(queue, key_filter)
         workers.append(p)
         p.start()
 

@@ -1,10 +1,12 @@
 import aioboto3
+import re
 
 
 class Bucket:
-    def __init__(self, name, creation_date):
+    def __init__(self, name, creation_date, key_filter):
         self.__name = name
         self.__creation_date = creation_date
+        self.__key_filter = key_filter
 
     async def process_bucket(self):
         async with aioboto3.resource("s3") as s3:
@@ -24,6 +26,9 @@ class Bucket:
         last_modified = ""
 
         async for object in bucket.objects.all():
+            match = re.match(self.__key_filter, object.key)
+            if not match:
+                continue
             size = await object.size
             date = await object.last_modified
             if last_modified == "" or date > last_modified:
