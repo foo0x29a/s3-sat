@@ -1,5 +1,6 @@
 import boto3
 from abc import abstractmethod, ABCMeta
+from botocore import exceptions
 
 class BucketSubResource(metaclass=ABCMeta):
     def __init__(self, bucket):
@@ -16,3 +17,14 @@ class BucketAcl(BucketSubResource):
     def get_content(self):
        return [self._bucket.Acl().owner, self._bucket.Acl().grants]
 
+class BucketCors(BucketSubResource):
+    def __init__(self, bucket):
+        super().__init__(bucket)
+
+    def get_content(self):
+        try:
+            cors = self._bucket.Cors().cors_rules
+        except exceptions.ClientError:
+            print("No CORS configuration")
+            cors = ["No CORS configuration"]
+        return cors

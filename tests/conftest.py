@@ -15,3 +15,8 @@ def s3(aws_credentials):
         s3 = boto3.resource("s3")
         yield s3
 
+@pytest.fixture(scope='function')
+def s3_client(aws_credentials):
+    with mock_s3():
+        s3_client = boto3.client("s3")
+        yield s3_client
