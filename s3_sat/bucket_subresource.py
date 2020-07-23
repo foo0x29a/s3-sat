@@ -28,3 +28,16 @@ class BucketCors(BucketSubResource):
             print("No CORS configuration")
             cors = ["No CORS configuration"]
         return cors
+
+class BucketLifecycle(BucketSubResource):
+    def __init__(self, bucket):
+        super().__init__(bucket)
+
+    def get_content(self):
+        try:
+            lifecycle = self._bucket.Lifecycle().rules
+        except exceptions.ClientError:
+            print("No lifecycle configuration")
+            lifecycle = ["No lifecycle configuration"]
+
+        return lifecycle
