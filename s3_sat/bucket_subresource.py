@@ -15,7 +15,7 @@ class BucketAcl(BucketSubResource):
         super().__init__(bucket)
 
     def get_content(self):
-       return [self._bucket.Acl().owner, self._bucket.Acl().grants]
+        return [self._bucket.Acl().owner, self._bucket.Acl().grants]
 
 class BucketCors(BucketSubResource):
     def __init__(self, bucket):
