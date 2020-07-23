@@ -11,7 +11,12 @@ def fill_queue(queue, workers_number, bucket_filter):
     try:
         buckets = list(s3.buckets.all())
     except exceptions.NoCredentialsError:
-        print("Auth Error: Please, either set necessary environment variables, or create the credentials config at ~/.aws")
+        print(
+            "Auth Error: Please, either set necessary environment variables, or create the credentials config at ~/.aws"
+        )
+        exit(1)
+    except exceptions.ClientError:
+        print("Auth Error: Please, double check your credentials")
         exit(1)
 
     for bucket in s3.buckets.all():

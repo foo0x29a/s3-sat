@@ -50,10 +50,10 @@ class Bucket:
         return f"{size} {power_labels[n]}B"
 
     def __calculate_cost(self, size):
-        gb = size/1024/1024/1024
+        gb = size / 1024 / 1024 / 1024
         # rough cost estimate based on the us-east-1 price
         price = gb * 0.023
-        return f'{price:.3f}'
+        return f"{price:.3f}"
 
     def __str__(self):
         return (
