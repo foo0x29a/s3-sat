@@ -4,8 +4,7 @@ from botocore import exceptions
 from multiprocessing import Lock, JoinableQueue
 from .worker import Worker
 
-
-def fill_queue(queue, workers_number, bucket_filter):
+def get_buckets():
     s3 = boto3.resource("s3")
 
     try:
@@ -19,11 +18,18 @@ def fill_queue(queue, workers_number, bucket_filter):
         print("Auth Error: Please, double check your credentials")
         exit(1)
 
-    for bucket in s3.buckets.all():
+    return buckets
+
+
+def fill_queue(queue, buckets, bucket_filter):
+
+    for bucket in buckets:
         match = re.match(bucket_filter, bucket.name)
         if match:
             queue.put((bucket.name, bucket.creation_date))
 
+
+def add_sentinels(queue, workers_number):
     for i in range(0, workers_number):
         queue.put(None)
 
@@ -32,7 +38,9 @@ def start_workers(workers_number, bucket_filter, key_filter):
     queue = JoinableQueue()
     workers = []
 
-    fill_queue(queue, workers_number, bucket_filter)
+    buckets = get_buckets()
+    fill_queue(queue, buckets, bucket_filter)
+    add_sentinels(queue, workers_number)
 
     for i in range(0, workers_number):
         p = Worker(queue, key_filter)
