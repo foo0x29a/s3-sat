@@ -1,11 +1,19 @@
 import boto3
 import re
+from botocore import exceptions
 from multiprocessing import Lock, JoinableQueue
 from .worker import Worker
 
 
 def fill_queue(queue, workers_number, bucket_filter):
     s3 = boto3.resource("s3")
+
+    try:
+        buckets = list(s3.buckets.all())
+    except exceptions.NoCredentialsError:
+        print("Auth Error: Please, either set necessary environment variables, or create the credentials config at ~/.aws")
+        exit(1)
+
     for bucket in s3.buckets.all():
         match = re.match(bucket_filter, bucket.name)
         if match:
