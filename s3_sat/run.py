@@ -34,16 +34,16 @@ def add_sentinels(queue, workers_number):
         queue.put(None)
 
 
-def start_workers(workers_number, bucket_filter, key_filter):
+def start_workers(workers_number, filters):
     queue = JoinableQueue()
     workers = []
 
     buckets = get_buckets()
-    fill_queue(queue, buckets, bucket_filter)
+    fill_queue(queue, buckets, filters['bucket_filter'])
     add_sentinels(queue, workers_number)
 
     for i in range(0, workers_number):
-        p = Worker(queue, key_filter)
+        p = Worker(queue, filters['key_filter'])
         workers.append(p)
         p.start()
 

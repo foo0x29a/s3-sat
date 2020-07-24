@@ -34,7 +34,8 @@ def main():
     )
     args = parser.parse_args()
 
-    start_workers(args.workers, args.bucket_filter, args.key_filter)
+    filters = {'bucket_filter': args.bucket_filter, 'key_filter': args.key_filter}
+    start_workers(args.workers, filters)
 
 
 if __name__ == "__main__":
