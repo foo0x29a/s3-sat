@@ -57,6 +57,7 @@ $ python setup.py sdist bdist_wheel
 ## Installation
 ```
 # VERSION should be replaced by the current version in the setup.py
+$ python -m pip install -r requirements.txt
 $ python -m pip install ./dist/s3-sat-${VERSION}.tar.gz
 ```
 ## Running
@@ -112,5 +113,5 @@ docker run -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${
 - AsyncIO can maximize the usage of each worker's thread while donwloading content from S3
 
 # Caveats
-- It lacks a good way of calculating the total cost of a bucket. It uses a rought cost estimate based on the us-east-1 region.
+- It lacks a good way of calculating the total cost of a bucket. It uses a rough cost estimate based on the us-east-1 region.
 - It's not easy to test asyncIO operations of boto3
