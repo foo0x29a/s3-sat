@@ -25,7 +25,6 @@ class BucketCors(BucketSubResource):
         try:
             cors = [self._bucket.Cors().cors_rules]
         except exceptions.ClientError:
-            print("No CORS configuration")
             cors = ["No CORS configuration"]
         return cors
 
@@ -37,7 +36,6 @@ class BucketLifecycle(BucketSubResource):
         try:
             lifecycle = [self._bucket.Lifecycle().rules]
         except exceptions.ClientError:
-            print("No lifecycle configuration")
             lifecycle = ["No lifecycle configuration"]
 
         return lifecycle
@@ -60,7 +58,6 @@ class BucketPolicy(BucketSubResource):
         try:
             policy = [self._bucket.Policy().policy]
         except exceptions.ClientError:
-            print("No policy configuration")
             policy = ["No policy configuration"]
 
         return policy
@@ -73,6 +70,5 @@ class BucketTagging(BucketSubResource):
         try:
             tagging = [self._bucket.Tagging().tag_set]
         except exceptions.ClientError:
-            print("No tag available")
             tagging = ["No tag available"]
         return tagging
