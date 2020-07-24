@@ -24,6 +24,6 @@ def test_fill_queue(s3):
     s3.create_bucket(Bucket="gnitset")
     buckets = run.get_buckets()
 
-    run.fill_queue(queue, buckets, "test.*")
+    run.fill_queue(queue, buckets, "test.*", dict())
 
     assert queue.get() is not None

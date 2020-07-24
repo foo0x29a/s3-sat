@@ -20,7 +20,7 @@ class Worker(Process):
             # sentinel
             if bucket_info == None:
                 break
-            bucket = Bucket(bucket_info[0], bucket_info[1], self.__key_filter)
+            bucket = Bucket(bucket_info[0], bucket_info[1], bucket_info[2] ,self.__key_filter)
             aio_task = asyncio.create_task(bucket.process_bucket())
             aio_tasks.append(aio_task)
             self.__queue.task_done()

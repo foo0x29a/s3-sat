@@ -12,7 +12,7 @@ RUN python3 setup.py sdist bdist_wheel
 
 FROM base
 
-COPY --from=build /dist/s3-sat-0.0.1.tar.gz /
-RUN python3 -m pip install s3-sat-0.0.1.tar.gz
+COPY --from=build /dist/s3-sat-0.0.2.tar.gz /
+RUN python3 -m pip install s3-sat-0.0.2.tar.gz
 
 ENTRYPOINT ["python3", "-m", "s3_sat"]
