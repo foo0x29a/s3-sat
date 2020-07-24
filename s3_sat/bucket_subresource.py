@@ -41,3 +41,13 @@ class BucketLifecycle(BucketSubResource):
             lifecycle = ["No lifecycle configuration"]
 
         return lifecycle
+
+class BucketLogging(BucketSubResource):
+    def __init__(self, bucket):
+        super().__init__(bucket)
+
+    def get_content(self):
+        logging_enabled = self._bucket.Logging().logging_enabled
+        if not logging_enabled:
+            logging_enabled = False
+        return [logging_enabled]

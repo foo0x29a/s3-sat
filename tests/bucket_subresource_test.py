@@ -5,6 +5,7 @@ from botocore import exceptions
 from s3_sat.bucket_subresource import BucketAcl
 from s3_sat.bucket_subresource import BucketCors
 from s3_sat.bucket_subresource import BucketLifecycle
+from s3_sat.bucket_subresource import BucketLogging
 
 
 @mock_s3
@@ -85,5 +86,14 @@ def test_get_lifecycle(s3, s3_client):
 
     bucket_lifecycle = BucketLifecycle(bucket)
     content = bucket_lifecycle.get_content()
+
+    assert len(content) == 1
+
+@mock_s3
+def test_get_logging(s3):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    bucket_logging = BucketLogging(bucket)
+    content = bucket_logging.get_content()
 
     assert len(content) == 1
