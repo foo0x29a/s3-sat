@@ -3,6 +3,7 @@ import re
 from botocore import exceptions
 from multiprocessing import Lock, JoinableQueue
 from .worker import Worker
+from .subresource_factory import SubResourceFactory
 
 def get_buckets():
     s3 = boto3.resource("s3")
@@ -21,12 +22,13 @@ def get_buckets():
     return buckets
 
 
-def fill_queue(queue, buckets, bucket_filter):
+def fill_queue(queue, buckets, bucket_filter, subresources):
 
     for bucket in buckets:
         match = re.match(bucket_filter, bucket.name)
         if match:
-            queue.put((bucket.name, bucket.creation_date))
+            subresource_list = SubResourceFactory().create(bucket, subresources)
+            queue.put((bucket.name, bucket.creation_date, subresource_list))
 
 
 def add_sentinels(queue, workers_number):
@@ -34,12 +36,12 @@ def add_sentinels(queue, workers_number):
         queue.put(None)
 
 
-def start_workers(workers_number, filters):
+def start_workers(workers_number, filters, subresources):
     queue = JoinableQueue()
     workers = []
 
     buckets = get_buckets()
-    fill_queue(queue, buckets, filters['bucket_filter'])
+    fill_queue(queue, buckets, filters['bucket_filter'], subresources)
     add_sentinels(queue, workers_number)
 
     for i in range(0, workers_number):

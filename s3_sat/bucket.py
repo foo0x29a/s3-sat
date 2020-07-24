@@ -3,9 +3,10 @@ import re
 
 
 class Bucket:
-    def __init__(self, name, creation_date, key_filter):
+    def __init__(self, name, creation_date, subresources ,key_filter):
         self.__name = name
         self.__creation_date = creation_date
+        self.__subresources = subresources
         self.__key_filter = key_filter
 
     async def process_bucket(self):
@@ -63,4 +64,5 @@ class Bucket:
             f"Total Size: {self.__format_bytes(self.__size)}\n"
             f"Total Cost: USD {self.__calculate_cost(self.__size)}\n"
             f"Most Recent Updated File: {self.__most_recent_file} Last Modified: {self.__last_modified}\n"
+            f"SubResources: {self.__subresources}\n"
         )

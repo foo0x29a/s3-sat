@@ -8,7 +8,17 @@ from s3_sat.bucket_subresource import BucketLifecycle
 from s3_sat.bucket_subresource import BucketLogging
 from s3_sat.bucket_subresource import BucketPolicy
 from s3_sat.bucket_subresource import BucketTagging
+from s3_sat.subresource_factory import SubResourceFactory
 
+@mock_s3
+def test_factory(s3):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    args = {"acl":True}
+
+    subresources = SubResourceFactory().create(bucket, args)
+
+    assert len(subresources) > 0
 
 @mock_s3
 def test_get_acl(s3):
