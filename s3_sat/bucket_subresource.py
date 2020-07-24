@@ -51,3 +51,16 @@ class BucketLogging(BucketSubResource):
         if not logging_enabled:
             logging_enabled = False
         return logging_enabled
+
+class BucketPolicy(BucketSubResource):
+    def __init__(self, bucket):
+        super().__init__(bucket)
+
+    def get_content(self):
+        try:
+            policy = [self._bucket.Policy().policy]
+        except exceptions.ClientError:
+            print("No policy configuration")
+            policy = ["No policy configuration"]
+
+        return policy

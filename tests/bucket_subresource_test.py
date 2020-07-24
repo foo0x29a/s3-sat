@@ -1,11 +1,13 @@
-from datetime import datetime
 import pytest
+import json
+from datetime import datetime
 from moto import mock_s3
 from botocore import exceptions
 from s3_sat.bucket_subresource import BucketAcl
 from s3_sat.bucket_subresource import BucketCors
 from s3_sat.bucket_subresource import BucketLifecycle
 from s3_sat.bucket_subresource import BucketLogging
+from s3_sat.bucket_subresource import BucketPolicy
 
 
 @mock_s3
@@ -95,5 +97,36 @@ def test_get_logging(s3):
     bucket = s3.Bucket("testing")
     bucket_logging = BucketLogging(bucket)
     content = bucket_logging.get_content()
+
+    assert len(content) == 1
+
+@mock_s3
+def test_get_policy_exception(s3):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    bucket_policy = BucketPolicy(bucket)
+    content = bucket_policy.get_content()
+
+    assert content.pop() == "No policy configuration"
+
+@mock_s3
+def test_get_policy(s3, s3_client):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    policy= {
+    'Version': '2012-10-17',
+    'Statement': [{
+        'Sid': 'AddPerm',
+        'Effect': 'Allow',
+        'Principal': '*',
+        'Action': ['s3:GetObject'],
+        'Resource': f'arn:aws:s3:::testing/*'
+    }]
+}
+    policy = json.dumps(policy)
+    s3_client.put_bucket_policy(Bucket="testing", Policy=policy)
+
+    bucket_policy = BucketPolicy(bucket)
+    content = bucket_policy.get_content()
 
     assert len(content) == 1
