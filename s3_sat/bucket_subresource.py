@@ -23,7 +23,7 @@ class BucketCors(BucketSubResource):
 
     def get_content(self):
         try:
-            cors = self._bucket.Cors().cors_rules
+            cors = [self._bucket.Cors().cors_rules]
         except exceptions.ClientError:
             print("No CORS configuration")
             cors = ["No CORS configuration"]
@@ -35,7 +35,7 @@ class BucketLifecycle(BucketSubResource):
 
     def get_content(self):
         try:
-            lifecycle = self._bucket.Lifecycle().rules
+            lifecycle = [self._bucket.Lifecycle().rules]
         except exceptions.ClientError:
             print("No lifecycle configuration")
             lifecycle = ["No lifecycle configuration"]
@@ -47,7 +47,7 @@ class BucketLogging(BucketSubResource):
         super().__init__(bucket)
 
     def get_content(self):
-        logging_enabled = self._bucket.Logging().logging_enabled
+        logging_enabled = [self._bucket.Logging().logging_enabled]
         if not logging_enabled:
             logging_enabled = False
-        return [logging_enabled]
+        return logging_enabled
