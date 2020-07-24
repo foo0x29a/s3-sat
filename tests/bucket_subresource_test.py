@@ -8,6 +8,7 @@ from s3_sat.bucket_subresource import BucketCors
 from s3_sat.bucket_subresource import BucketLifecycle
 from s3_sat.bucket_subresource import BucketLogging
 from s3_sat.bucket_subresource import BucketPolicy
+from s3_sat.bucket_subresource import BucketTagging
 
 
 @mock_s3
@@ -128,5 +129,33 @@ def test_get_policy(s3, s3_client):
 
     bucket_policy = BucketPolicy(bucket)
     content = bucket_policy.get_content()
+
+    assert len(content) == 1
+
+@mock_s3
+def test_get_tagging_exception(s3):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    bucket_tagging = BucketTagging(bucket)
+    content = bucket_tagging.get_content()
+
+    assert content.pop() == "No tag available"
+
+@mock_s3
+def test_get_tagging(s3, s3_client):
+    s3.create_bucket(Bucket="testing")
+    bucket = s3.Bucket("testing")
+    tagging = {
+        'TagSet': [
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    }
+    s3_client.put_bucket_tagging(Bucket="testing", Tagging=tagging)
+
+    bucket_tagging = BucketTagging(bucket)
+    content = bucket_tagging.get_content()
 
     assert len(content) == 1

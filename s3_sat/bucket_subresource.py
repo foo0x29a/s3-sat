@@ -64,3 +64,15 @@ class BucketPolicy(BucketSubResource):
             policy = ["No policy configuration"]
 
         return policy
+
+class BucketTagging(BucketSubResource):
+    def __init__(self, bucket):
+        super().__init__(bucket)
+
+    def get_content(self):
+        try:
+            tagging = [self._bucket.Tagging().tag_set]
+        except exceptions.ClientError:
+            print("No tag available")
+            tagging = ["No tag available"]
+        return tagging
