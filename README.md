@@ -27,7 +27,8 @@ Most Recent Updated File:  Last Modified:
 # Usage
 ```
 $ python main.py -h
-usage: main.py [-h] [--workers WORKERS] [--bucket-filter BUCKET_FILTER] [--key-filter KEY_FILTER]
+usage: main.py [-h] [--workers WORKERS] [--bucket-filter BUCKET_FILTER] [--key-filter KEY_FILTER] [--acl] [--cors] [--lifecycle]
+               [--logging] [--policy] [--tagging]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -37,6 +38,13 @@ optional arguments:
                         Regular expression to filter buckets
   --key-filter KEY_FILTER, -k KEY_FILTER
                         Regular expression to filter keys
+  --acl                 Include Acl subresource
+  --cors                Include CORS subresource
+  --lifecycle           Include Lifecycle subresource
+  --logging             Include Logging subresource
+  --policy              Include Policy subresource
+  --tagging             Include Tagging subresource
+
 ```
 
 # Standalone
@@ -114,4 +122,5 @@ docker run -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${
 
 # Caveats
 - It lacks a good way of calculating the total cost of a bucket. It uses a rough cost estimate based on the us-east-1 region.
+- Currently, the subresources (e.g.: CORS, tagging etc) are being fetched synchronously, which adds an overhead proportional to the number of buckets.
 - It's not easy to test asyncIO operations of boto3
