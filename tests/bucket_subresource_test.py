@@ -2,7 +2,6 @@ import pytest
 import json
 from datetime import datetime
 from moto import mock_s3
-from botocore import exceptions
 from s3_sat.bucket_subresource import BucketAcl
 from s3_sat.bucket_subresource import BucketCors
 from s3_sat.bucket_subresource import BucketLifecycle
